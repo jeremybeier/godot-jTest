@@ -26,7 +26,6 @@ jobs:
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'github-actions@github.com'
-          gh auth setup-git
           git checkout -b ${{ env.RELEASE_BRANCH }}
           git add project.godot addons/j_test/plugin.cfg
           git commit -m "Set version to ${{ env.VERSION }}"
