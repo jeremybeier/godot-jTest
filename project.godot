@@ -12,7 +12,7 @@ config_version=5
 
 config/name="j-test"
 config/description="Minimal test framework as plugin for Godot."
-config/version="0.1.0-first-release-3"
+config/version="0.1.0-first-release-4"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 
 [editor_plugins]

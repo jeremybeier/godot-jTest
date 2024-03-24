@@ -23,12 +23,12 @@ jobs:
           git add project.godot addons/j_test/plugin.cfg
           git commit -m "Set version to v${{ env.VERSION }}"
       - name: Push Release Branch
-        run: git push origin release/v${{ env.VERSION }}
+        run: |
+          gh auth setup-git
+          git push origin release/v${{ env.VERSION }}
       - name: Create Release Archive
         run: git archive --format zip --output "jTest_v${{ env.VERSION }}.zip" HEAD
       - name: Create Release Draft
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >-
           gh release create "v${{ env.VERSION }}"
           "jTest_v${{ env.VERSION }}.zip"
