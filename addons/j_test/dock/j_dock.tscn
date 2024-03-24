@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://bjeiid7etg6uo"]
+
+[ext_resource type="Script" path="res://addons/j_test/dock/j_dock.gd" id="1_cehyf"]
+
+[node name="jTest" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cehyf")
+
+[node name="Box" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 93.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="Box"]
+layout_mode = 2
+text = "jTest executor"
+
+[node name="Run" type="Button" parent="Box"]
+layout_mode = 2
+text = "Run"
+
+[node name="Debug" type="Button" parent="Box"]
+layout_mode = 2
+text = "Debug"

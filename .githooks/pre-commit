@@ -1,0 +1,19 @@
+#!/bin/bash
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+echo "Current branch: $current_branch"
+
+commit_depth=$(git rev-list --count HEAD)
+echo "Commit depth: $commit_depth"
+
+set_version=$(cat VERSION)
+echo "Set version: $set_version"
+
+new_version="${set_version}-${current_branch}-${commit_depth}"
+echo "New version: $new_version"
+
+sed -i "s/config\/version=\"[a-zA-Z0-9_\.\-]*\"/config\/version=\"${new_version}\"/g" project.godot
+sed -i "s/version=\"[a-zA-Z0-9_\.\-]*\"/version=\"${new_version}\"/g" addons/j_test/plugin.cfg
+
+echo "Updated project.godot and plugin.cfg with new version: ${new_version}"
+echo "Staging changes to project.godot and plugin.cfg"
+git add project.godot addons/j_test/plugin.cfg

@@ -1,0 +1,14 @@
+#!/bin/bash
+protected_branch="$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')"
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$current_branch" == "$protected_branch" ]; then
+    echo "You are forbidden to push to the protected branch '${current_branch}'."
+    exit 1
+fi
+
+command -v git-lfs >/dev/null 2>&1 || {
+    echo >&2 "\nThis repository is configured for Git LFS but 'git-lfs' was not found on your path. If you no longer wish to use Git LFS, remove this hook by deleting '.git/hooks/pre-push'.\n"
+    exit 2
+}
+git lfs pre-push "$@"
