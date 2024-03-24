@@ -6,21 +6,37 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Create Version
+      - name: Get Version Variables
         run: |
           version=$(cat VERSION)
           echo "VERSION=$version" >> $GITHUB_ENV
-      - name: Create Archive
-        run: git archive --format zip --output "jTest_v${{ env.VERSION }}.zip" HEAD
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "TAG=v$version" >> $GITHUB_ENV
+          echo "ASSET_NAME=jTest_v${version}.zip" >> $GITHUB_ENV
+          echo "RELEASE_BRANCH=release/v$version" >> $GITHUB_ENV
+      - name: Modify Version
+        run: |
+          sed -i "s/config\/version=\"[a-zA-Z0-9_\.\-]*\"/config\/version=\"${{ env.VERSION }}\"/g" project.godot
+          sed -i "s/version=\"[a-zA-Z0-9_\.\-]*\"/version=\"${{ env.VERSION }}\"/g" addons/j_test/plugin.cfg
+      - name: Setup Release Branch
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions@github.com'
+          git checkout -b ${{ env.RELEASE_BRANCH }}
+          git add project.godot addons/j_test/plugin.cfg
+          git commit -m "Set version to ${{ env.VERSION }}"
+          git push origin ${{ env.RELEASE_BRANCH }}
+      - name: Create Release Archive
+        run: git archive --format zip --output ${{ env.ASSET_NAME }} HEAD
+      - name: Create Release Draft
         run: >-
-          gh release create "v${{ env.VERSION }}"
-          "jTest_v${{ env.VERSION }}.zip"
+          gh release create ${{ env.TAG }}
+          ${{ env.ASSET_NAME }}
           --draft
-          --title "v${{ env.VERSION }}"
+          --target ${{ env.RELEASE_BRANCH }}
+          --title ${{ env.TAG }}
           --notes-file CHANGELOG.md
