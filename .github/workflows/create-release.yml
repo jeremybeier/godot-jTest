@@ -22,6 +22,8 @@ jobs:
         run: |
           sed -i "s/config\/version=\"[a-zA-Z0-9_\.\-]*\"/config\/version=\"${{ env.VERSION }}\"/g" project.godot
           sed -i "s/version=\"[a-zA-Z0-9_\.\-]*\"/version=\"${{ env.VERSION }}\"/g" addons/j_test/plugin.cfg
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions@github.com'
           gh auth setup-git
           git add project.godot addons/j_test/plugin.cfg
           git commit -m "Set version to v${{ env.VERSION }}"
