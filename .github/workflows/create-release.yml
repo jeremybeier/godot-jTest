@@ -1,5 +1,5 @@
 name: create-release
-on: workflow_dispatch
+on: push
 
 jobs:
   create-release:
@@ -9,13 +9,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Create Version
+      - name: Get Version
         run: |
           version=$(cat VERSION)
           echo "VERSION=$version" >> $GITHUB_ENV
-      - name: Create Archive
+      - name: Create Release Branch
+        run: |
+          git checkout -b release/v${{ env.VERSION }}
+      - name: Set Version
+        run: |
+          sed -i "s/config\/version=\"[a-zA-Z0-9_\.\-]*\"/config\/version=\"${{ env.VERSION }}\"/g" project.godot
+          sed -i "s/version=\"[a-zA-Z0-9_\.\-]*\"/version=\"${{ env.VERSION }}\"/g" addons/j_test/plugin.cfg
+          git add project.godot addons/j_test/plugin.cfg
+          git commit -m "Set version to v${{ env.VERSION }}"
+      - name: Push Release Branch
+        run: git push origin release/v${{ env.VERSION }}
+      - name: Create Release Archive
         run: git archive --format zip --output "jTest_v${{ env.VERSION }}.zip" HEAD
-      - name: Release
+      - name: Create Release Draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >-
