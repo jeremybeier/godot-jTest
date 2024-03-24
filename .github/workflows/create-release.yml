@@ -1,0 +1,26 @@
+name: create-release
+on: workflow_dispatch
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create Version
+        run: |
+          version=$(cat VERSION)
+          echo "VERSION=$version" >> $GITHUB_ENV
+      - name: Create Archive
+        run: git archive --format zip --output "jTest_v${{ env.VERSION }}.zip" HEAD
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh release create "v${{ env.VERSION }}"
+          "jTest_v${{ env.VERSION }}.zip"
+          --draft
+          --title "v${{ env.VERSION }}"
+          --notes-file CHANGELOG.md

@@ -1,9 +1,6 @@
 # jTest
 
-Minimal test framework as plugin for Godot.  
-Made for use in my projects.
-
-![alt text](docs/demo.png)
+Minimal test framework for godot, made for use in my projects.
 
 ## Usage
 
@@ -54,11 +51,9 @@ func test_capitalize(input: String, expected: String):
 
 ```
 
-Then execute from the provided editor dock:
+Then execute from the provided editor dock.
 
 > Use `Debug` if you want to use breakpoints in the editor.
-
-![dock](docs/image.png)
 
 Or execute via shell:
 
@@ -76,18 +71,3 @@ You may write your own check functions which just report a failure via calling `
 | ------------- | ----------------------------------------------------- |
 | j_is          | Checks for same type and value.                       |
 | j_is_close_to | Checks two floats are within tolerance of each other. |
-
-## Development
-
-After cloning this repository configure git to use the checked in `.githooks` folder instead of the default.
-
-```shell
-git config core.hooksPath .githooks
-```
-
-The checked-in hooks are used for versioning and branch protection.
-
-## Release
-
-Manually trigger the GitHub Action `create-release` to create a release draft.  
-Check for necessary changes and publish.
